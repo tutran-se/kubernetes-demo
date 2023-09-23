@@ -1,3 +1,4 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
@@ -7,6 +8,10 @@ const errorHandler = require("./middlewares/errorHandler");
 const logger = require("./config/logger");
 const requestLogger = require("./middlewares/requestLogger");
 const swaggerDocs = require("./config/swagger");
+const connectDB = require("./config/db");
+
+// Load env vars
+dotenv.config();
 
 const app = express();
 
@@ -17,6 +22,7 @@ app.use(helmet());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // Database connection
+connectDB();
 
 // Request logger
 app.use(requestLogger);

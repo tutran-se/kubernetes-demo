@@ -1,3 +1,6 @@
 image:
   repository: tutran0806/kube-demo
   tag: latest
+
+secrets:
+  MONGODB_URI: test
