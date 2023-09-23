@@ -4,7 +4,6 @@ const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
 const productRoutes = require("./routes/productRoutes");
 const errorHandler = require("./middlewares/errorHandler");
-const connectDB = require("./config/db");
 const logger = require("./config/logger");
 const requestLogger = require("./middlewares/requestLogger");
 const swaggerDocs = require("./config/swagger");
@@ -18,7 +17,6 @@ app.use(helmet());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // Database connection
-connectDB();
 
 // Request logger
 app.use(requestLogger);
