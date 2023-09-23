@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline with Helm
 
 on:
   pull_request:
@@ -23,3 +23,38 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+  build_and_push:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t your_dockerhub_username/your_image_name:latest .
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Push Docker image
+        run: docker push your_dockerhub_username/your_image_name:latest
+
+  deploy_with_helm:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+
+      - name: Authenticate with DigitalOcean
+        run: |
+          doctl auth init --access-token ${{ secrets.DO_ACCESS_TOKEN }}
+          doctl kubernetes cluster kubeconfig save YOUR_CLUSTER_NAME
+
+      - name: Deploy using Helm
+        run: |
+          helm upgrade --install my-release-name ./charts/my-chart --set image.repository=your_dockerhub_username/your_image_name,image.tag=latest
