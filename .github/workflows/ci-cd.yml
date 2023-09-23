@@ -53,8 +53,8 @@ jobs:
       - name: Authenticate with DigitalOcean
         run: |
           doctl auth init --access-token ${{ secrets.DO_ACCESS_TOKEN }}
-          doctl kubernetes cluster kubeconfig save YOUR_CLUSTER_NAME
+          doctl kubernetes cluster kubeconfig save my-cluster
 
       - name: Deploy using Helm
         run: |
-          helm upgrade --install my-release-name ./charts/my-chart --set image.repository=your_dockerhub_username/your_image_name,image.tag=latest
+          helm upgrade --install express-release ./helm-charts --set image.repository=tutran0806/kube-demo,image.tag=${{ github.sha }}
