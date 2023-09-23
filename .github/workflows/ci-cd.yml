@@ -43,6 +43,8 @@ jobs:
   deploy_with_helm:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT_NAME: ${{ startsWith(github.event.release.name, 'staging') && 'staging' || startsWith(github.event.release.name, 'production') && 'production' || 'none' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -65,6 +67,23 @@ jobs:
           doctl auth init --access-token ${{ secrets.DO_ACCESS_TOKEN }}
           doctl kubernetes cluster kubeconfig save my-cluster
 
+      - name: Check Environment
+        run: |
+          if [[ "${ENVIRONMENT_NAME}" == "none" ]]; then
+            echo "Invalid release name. Exiting."
+            exit 1
+          fi
+
       - name: Deploy using Helm
         run: |
-          helm upgrade --install express-release ./helm-charts --set image.repository=tutran0806/kube-demo,image.tag=${{ github.sha }}
+          MONGO_URL_SECRET_NAME="MONGO_URL_${ENVIRONMENT_NAME^^}"
+          MONGO_URL_VALUE=${!MONGO_URL_SECRET_NAME}
+
+          helm upgrade --install ${{ env.ENVIRONMENT_NAME }}-release ./helm-charts \
+            --namespace ${{ env.ENVIRONMENT_NAME }} \
+            --create-namespace \
+            --set image.repository=tutran0806/kube-demo,image.tag=${{ github.sha }} \
+            --set secrets.MONGO_URL=$MONGO_URL_VALUE
+        env:
+          MONGO_URL_STAGING: ${{ secrets.MONGO_URL_STAGING }}
+          MONGO_URL_PRODUCTION: ${{ secrets.MONGO_URL_PRODUCTION }}
