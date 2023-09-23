@@ -3,4 +3,4 @@ image:
   tag: latest
 
 secrets:
-  MONGODB_URI: test
+  MONGO_URL: test
