@@ -9,7 +9,7 @@ exports.getProducts = async (req, res, next) => {
     // const products = [{ name: "Product 1" }, { name: "Product 2" }, { name: "Product 3" }];
     // res.json(products);
     // throw new CustomError(400, "Custom error message");
-    res.json({ mongodb: process.env.MONGO_URL });
+    res.json({ mongodb: process.env.MONGO_URL, hello: "Minh Bống" });
   } catch (error) {
     logger.error(`Failed to fetch products: ${error.message}`);
     next(error);
