@@ -1,0 +1,3 @@
+node_modules/
+# ignore all test files
+**/tests/**
