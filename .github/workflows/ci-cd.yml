@@ -49,7 +49,10 @@ jobs:
           curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
           chmod 700 get_helm.sh
           ./get_helm.sh
-
+      - name: Install doctl
+        run: |
+          curl -sL https://github.com/digitalocean/doctl/releases/download/v2.0.0/doctl-2.0.0-linux-amd64.tar.gz | tar xz
+          sudo mv doctl /usr/local/bin
       - name: Authenticate with DigitalOcean
         run: |
           doctl auth init --access-token ${{ secrets.DO_ACCESS_TOKEN }}
