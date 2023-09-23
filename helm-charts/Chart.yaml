@@ -1,0 +1,4 @@
+apiVersion: v2
+name: helm-chart
+description: Helm chart for my Node.js Express application
+version: 0.1.0
