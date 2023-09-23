@@ -5,7 +5,7 @@ exports.getProducts = async (req, res, next) => {
   try {
     logger.info("Fetching all products");
     // const products = await Product.find();
-    const products = [{ name: "Product 1" }, { name: "Product 2" }];
+    const products = [{ name: "Product 1" }, { name: "Product 2" }, { name: "Product 3" }];
     res.json(products);
   } catch (error) {
     logger.error(`Failed to fetch products: ${error.message}`);
