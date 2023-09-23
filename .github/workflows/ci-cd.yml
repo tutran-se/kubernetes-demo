@@ -32,13 +32,13 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build -t your_dockerhub_username/your_image_name:latest .
+        run: docker build -t tutran0806/kube-demo:latest .
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Push Docker image
-        run: docker push your_dockerhub_username/your_image_name:latest
+        run: docker push tutran0806/kube-demo:latest
 
   deploy_with_helm:
     if: github.event_name == 'release'
